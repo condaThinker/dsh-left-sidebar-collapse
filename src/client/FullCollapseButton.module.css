@@ -1,0 +1,22 @@
+/* Floating expand-sidebar button shown when fully-collapse hides the rail. */
+
+.expand {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-module-platform);
+  color: var(--dsw-alias-label-primary);
+  cursor: pointer;
+}
+
+.expand:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
