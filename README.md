@@ -40,11 +40,23 @@ dsh --profile web
 After install, open **Settings → General** and toggle **Auto-collapse
 sidebar** (and optionally **Fully collapse**).
 
-> This plugin ships a `prepare` build script. git-based installs run that
-> script to build `lib/`, so the profile must allow it: add
-> `dsh-left-sidebar-collapse` to the profile's `allowBuilds` (see `pnpm
-> install` docs) before `dsh plugin add`. Alternatively, for a no-build
-> install, commit a freshly built `lib/` into the repo and drop `prepare`.
+### Git install and the built `lib/`
+
+The browser bundle is loaded from `lib/` (`exports["./client"]` → `lib/client.js`),
+so the repository ships a freshly built `lib/` for a **zero-build** `dsh plugin
+add`. When releasing, build and commit it **on a machine with network access**
+(needed for `pnpm install` of the DSH peer packages):
+
+```sh
+pnpm install
+pnpm build                 # generates lib/{index,client,invariant}.js + lib/types
+git add -f lib
+git commit -m "build: commit lib for zero-build install"
+git push
+```
+
+`lib/` is deliberately committed (not git-ignored) so consumers installing via
+`dsh plugin add git+https://...` get a working bundle with no build step.
 
 ## Build
 
