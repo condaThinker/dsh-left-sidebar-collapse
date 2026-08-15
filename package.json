@@ -47,7 +47,6 @@
     "typecheck": "tsc --noEmit",
     "bundle": "tsdown",
     "watch": "tsdown --watch",
-    "prepare": "tsdown",
     "test": "vitest run"
   },
   "license": "MIT",
