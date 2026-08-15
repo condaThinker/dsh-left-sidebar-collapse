@@ -27,19 +27,9 @@ dsh --profile web
 
 安装后打开 **设置 → General**，打开 **自动收起侧边栏**（可选再加 **完全缩回**）。
 
-### Git 安装与已构建的 `lib/`
+### Git 安装与 `prepare` 构建
 
-浏览器 bundle 是从 `lib/` 加载的（`exports["./client"]` → `lib/client.js`），所以仓库需要随附一份构建好的 `lib/`，`dsh plugin add` 才能**免构建**直接使用。在**有网络**（能 `pnpm install` DSH 依赖）的机器上发布时，构建并提交它：
-
-```sh
-pnpm install
-pnpm build                 # 生成 lib/{index,client,invariant}.js + lib/types
-git add -f lib
-git commit -m "build: commit lib for zero-build install"
-git push
-```
-
-`lib/` 有意纳入 git（不被忽略），这样通过 `dsh plugin add git+...` 安装的用户无需任何构建步骤即可获得可用 bundle。
+本插件携带一个自包含的 `prepare` 构建脚本（`tsdown`），符合 DSH 插件分发约定。以 Git 方式安装时，pnpm 会在 profile 里执行该脚本构建 `lib/`，因此需要网络来解析 DSH 的 peer/dev 依赖，且需在 profile 放行构建脚本：把 `dsh-left-sidebar-collapse` 加入 profile 的 `allowBuilds`（参见 pnpm ≥10 的 `allowBuilds`/`strictDepBuilds`），然后再跑 `dsh plugin add`。若想免构建安装，维护者可把构建好的 `lib/` 提交进 Git 并去掉 `prepare`——但推荐路径是 `prepare`。
 
 ## 构建
 
